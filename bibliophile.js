@@ -19,7 +19,7 @@ async function run () {
     await page.setViewport({ width: 1920, height: 1080 });
     await page.goto(url, {waitUntil: 'networkidle2'});
     await page.waitFor(500);
-    await puppeteer_fp.default(page, { path: `results/screenshot-${product}-${stamp}.png` });
+    
     const html = await page.content();
     browser.close();
     fs.writeFile(`results/index-${product}-${stamp}.html`, html, error => {
