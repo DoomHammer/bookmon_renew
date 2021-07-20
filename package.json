@@ -1,0 +1,12 @@
+{
+  "author": {
+    "name": "Piotr Gaczkowski"
+  },
+  "dependencies": {
+    "puppeteer": "9.1.1",
+    "puppeteer-full-page-screenshot": "1.0.5",
+    "node-html-parser": "3.3.4"
+  },
+  "name": "bookmon",
+  "version": "0.1.0"
+}
