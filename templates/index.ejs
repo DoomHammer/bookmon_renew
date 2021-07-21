@@ -10,27 +10,9 @@
 
 <body>
   <div id="panel">
-    <label>Month
-      <select id="month">
-        <% const
-          months=["January","February","March","April","May","June","July","August","September","October","November","December"]
-          for(let i=0; i < 12; ++i) {
-        %>
-          <option value="<%= i %>">
-            <%= months[i] %>
-          </option>
-          <% } %>
-      </select>
-    </label>
-    <label>Day
-      <select id="day">
-        <% for(let i=1; i <= 31; ++i) { %>
-          <option>
-            <%= i %>
-          </option>
-          <% } %>
-      </select>
-    </label>
+    <div id="yearc"></div>
+    <div id="monthc"></div>
+    <div id="dayc"></div>
   </div>
   <div id="files">
     <h2>Index</h2>
@@ -40,10 +22,11 @@
   </div>
   <iframe src="" id="preview"></iframe>
   <script>
-    window.files = <%- JSON.stringify(files) %>
-    window.files.forEach( file => 
-      file.date = new Date(Date.parse(file.stamp))
-    )
+    window.filesByDate = <%- JSON.stringify(filesByDate) %>
+      window.files = <%- JSON.stringify(files) %>
+        window.files.forEach(file =>
+          file.date = new Date(Date.parse(file.stamp))
+        )
   </script>
   <script src="assets/main.js"></script>
 </body>

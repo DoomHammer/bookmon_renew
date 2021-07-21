@@ -21,7 +21,6 @@ function getDisplayname(fileInfo) {
 }
 
 function printList(files, target) {
-  console.log(files)
   const nodeList = files.map(
     file => {
       const elem = document.createElement("li")
@@ -51,16 +50,76 @@ function printFilteredList() {
   printList(filteredFiles.filter(file => file.type == "position"), "position")
 }
 
-function hookupListeners() {
-  const ids = ["month", "day"]
+function renderSelectElement(name, id, values, texts = []) {
+  const label = document.createElement("label")
+  label.innerText = name
 
-  const delayedPrint = hang(printFilteredList, 500)
+  const select = document.createElement("select")
+  select.id = id
 
-  ids.forEach(id => {
-    document.getElementById(id).addEventListener("change", delayedPrint)
+  const optionList = values.map((val, i) => {
+    const option = document.createElement("option")
+    option.value = val
+    option.innerText = texts[i] || val
+    return option
   })
+
+  optionList.forEach(option => select.appendChild(option))
+  label.appendChild(select)
+  return label
 }
 
-hookupListeners()
+function notNullKeys(obj) {
+  let keys = Object.keys(obj)
+  return keys.filter(key => obj[key] != null)
+}
+
+function renderControlsYear() {
+  const yearKeys = notNullKeys(filesByDate)
+
+  const yearSelect = renderSelectElement("Year", "year", yearKeys)
+  yearSelect.addEventListener("change", () => { renderControlsMonth() })
+
+  const target = document.getElementById("yearc")
+  target.innerHTML = ""
+  target.appendChild(yearSelect)
+
+  renderControlsMonth()
+}
+
+function renderControlsMonth() {
+  const allMonthsNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
+  const year = document.getElementById("year").value
+  const monthKeys = notNullKeys(filesByDate[year])
+  const monthNames = monthKeys.map(n => allMonthsNames[n])
+
+  const monthSelect = renderSelectElement("Month", "month", monthKeys, monthNames)
+  monthSelect.addEventListener("change", () => { renderControlsDay() })
+
+  const target = document.getElementById("monthc")
+  target.innerHTML = ""
+  target.appendChild(monthSelect)
+
+  renderControlsDay()
+}
+
+function renderControlsDay() {
+  const delayedPrint = hang(printFilteredList, 500)
+
+  const year = document.getElementById("year").value
+  const month = document.getElementById("month").value
+  const dayKeys = notNullKeys(filesByDate[year][month])
+
+  const daySelect = renderSelectElement("Day", "day", dayKeys)
+  daySelect.addEventListener("change", () => { delayedPrint() })
+
+  const target = document.getElementById("dayc")
+  target.innerHTML = ""
+  target.appendChild(daySelect)
+  delayedPrint()
+}
+
+renderControlsYear()
 
 
