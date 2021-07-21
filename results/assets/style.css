@@ -4,7 +4,7 @@
 
 body {
   background-color: #3c3c3b;
-  color: white;
+  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
   font-size: 16px;
@@ -45,9 +45,15 @@ li {
   cursor: pointer;
 }
 
-li:hover {
+.category-rank {
+  color: #ccc;
+}
+
+li:hover,
+li:hover .category-rank {
   color: #f60;
 }
+
 
 iframe {
   width: 100%;

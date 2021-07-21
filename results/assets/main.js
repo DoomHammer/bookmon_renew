@@ -11,6 +11,52 @@ function swapIframe(filename) {
   document.getElementById("preview").src = `/${filename}`
 }
 
+function renderListItem(fileInfo) {
+
+  //setup name
+  const d = fileInfo.date
+  const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+  const timeStr = `${d.getHours()}:${d.getMinutes()}`
+  const dateTimeStr = `${dateStr} ${timeStr}`
+  const name = `${fileInfo.name} ${dateTimeStr}`
+
+
+  let rank = []
+  if (fileInfo.type == "position") {
+    //setup rank
+    rank = Object.values(fileInfo.rank)
+    rank = rank.sort((a, b) => a.category.localeCompare(b.category))
+    rank = rank.map(r => {
+      const elem = document.createElement("span")
+      elem.innerText = `#${r.rank}`
+      elem.title = `#${r.rank} in ${r.category}`
+      elem.className = "category-rank"
+      return elem
+    })
+  }
+
+  //glue together
+  const elem = document.createElement("li")
+  const nodesToAppend = []
+  elem.addEventListener("click", () => { swapIframe(fileInfo.filename) })
+
+  nodesToAppend.push(document.createTextNode(name))
+
+  if (fileInfo.type == "position") {
+    nodesToAppend.push(document.createTextNode(' ('))
+    for (let i = 0; i < rank.length; i++) {
+      nodesToAppend.push(rank[i])
+      if (i != rank.length - 1)
+        nodesToAppend.push(document.createTextNode(' '))
+    }
+    nodesToAppend.push(document.createTextNode(')'))
+  }
+
+  nodesToAppend.forEach(node => elem.append(node))
+
+  return elem
+}
+
 function getDisplayname(fileInfo) {
   const d = fileInfo.date
   const dateStr = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
@@ -21,14 +67,7 @@ function getDisplayname(fileInfo) {
 }
 
 function printList(files, target) {
-  const nodeList = files.map(
-    file => {
-      const elem = document.createElement("li")
-      elem.innerText = getDisplayname(file)
-      elem.addEventListener("click", () => { swapIframe(file.filename) })
-      return elem
-    }
-  )
+  const nodeList = files.map(renderListItem)
 
   const list = document.getElementById(target)
   list.innerHTML = ""

@@ -1,8 +1,10 @@
 const ejs = require("ejs")
 const fs = require("fs")
+const cheerio = require("cheerio")
 const { promisify } = require("util")
 
 const readdirAs = promisify(fs.readdir)
+const readFileAs = promisify(fs.readFile)
 const writeFileAs = promisify(fs.writeFile)
 
 const source_path = "results"
@@ -55,10 +57,36 @@ function structurizeByDate(files) {
   return dates
 }
 
+async function readRanksFromFile(filename) {
+  const content = await readFileAs(filename)
+  const $ = cheerio.load(content)
+
+  return $('li').map( (i,li) => {
+    
+    const parts = $(li).text().trim().split(" in " )
+    const numStr = parts[0].substr(1)
+    const category = parts[1]
+    
+    return {
+      rank: parseInt(numStr),
+      category
+    }
+  }).toArray()
+}
+
+async function fillRankData(files) {
+  return Promise.all(
+    files.map(async file => {
+      if (file.type != "position") return
+      file.rank = await readRanksFromFile(`${source_path}/${file.filename}`)
+    })
+  )
+}
+
 async function run() {
   let files = await readdirAs(source_path)
 
-  files = files.filter( fileName => fileName.endsWith(".html") && fileName !== "index.html")
+  files = files.filter(fileName => fileName.endsWith(".html") && fileName !== "index.html")
 
   const filesInfo = files.map(filename => {
     const parts = filename.split("-")
@@ -70,6 +98,8 @@ async function run() {
       stamp: stampStr
     }
   })
+
+  await fillRankData(filesInfo)
 
   const html = await ejs.renderFile(`${template_path}/index.ejs`, {
     files: filesInfo,
