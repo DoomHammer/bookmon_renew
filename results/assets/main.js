@@ -8,7 +8,7 @@ function hang(fun, time) {
 }
 
 function swapIframe(filename) {
-  document.getElementById("preview").src = `results/${filename}`
+  document.getElementById("preview").src = `/${filename}`
 }
 
 function getDisplayname(fileInfo) {
