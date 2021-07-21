@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmon Index</title>
+</head>
+
+<body>
+  <div id="panel">
+    <label>Month
+      <select id="month">
+        <% const
+          months=["January","February","March","April","May","June","July","August","September","October","November","December"]
+          for(let i=0; i < 12; ++i) {
+        %>
+          <option value="<%= i %>">
+            <%= months[i] %>
+          </option>
+          <% } %>
+      </select>
+    </label>
+    <label>Day
+      <select id="day">
+        <% for(let i=1; i <= 31; ++i) { %>
+          <option>
+            <%= i %>
+          </option>
+          <% } %>
+      </select>
+    </label>
+  </div>
+  <div id="files">
+    <h2>Index</h2>
+    <ul id="index"></ul>
+    <h2>Position</h2>
+    <ul id="position"></ul>
+  </div>
+  <iframe src="" id="preview"></iframe>
+  <script>
+    window.files = <%- JSON.stringify(files) %>
+    window.files.forEach( file => 
+      file.date = new Date(Date.parse(file.stamp))
+    )
+  </script>
+  <script src="assets/main.js"></script>
+</body>
+
+</html>
