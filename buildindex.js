@@ -56,7 +56,9 @@ function structurizeByDate(files) {
 }
 
 async function run() {
-  const files = await readdirAs(source_path)
+  let files = await readdirAs(source_path)
+
+  files = files.filter( fileName => fileName.endsWith(".html") && fileName !== "index.html")
 
   const filesInfo = files.map(filename => {
     const parts = filename.split("-")
