@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmon Index</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+  <h1>Software Architecture with C++</h1>
+  <h2>Date filter</h2>
+  <div id="panel">
+    <div id="yearc"></div>
+    <div id="monthc"></div>
+    <div id="dayc"></div>
+  </div>
+  <div id="files">
+    <div>
+      <h2>Whole Page Snapshots</h2>
+      <ul id="index"></ul>
+    </div>
+    <div>
+      <h2>Rank Snapshots</h2>
+      <ul id="position"></ul>
+    </div>
+  </div>
+  <iframe src="" id="preview"></iframe>
+  <script>
+    window.filesByDate = <%- JSON.stringify(filesByDate) %>
+    window.files = <%- JSON.stringify(files) %>
+    window.files.forEach(file =>
+      file.date = new Date(Date.parse(file.stamp))
+    )
+  </script>
+  <script src="assets/main.js"></script>
+</body>
+
+</html>
